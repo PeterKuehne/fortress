@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.13)
 project (Fortress)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 add_executable(fortress src/main.cpp)
 add_library(fortresslib "")
@@ -25,6 +25,8 @@ add_subdirectory(third-party/glfw)
 set(INSTALL_GTEST OFF CACHE BOOL "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" FORCE)
 add_subdirectory(third-party/googletest)
 add_subdirectory(third-party/lua)
+set(SOL2_ENABLE_INSTALL OFF)
+add_subdirectory(third-party/sol2)
 
 # Ensure they are added to compiler and linker paths
 target_link_libraries(fortresslib soil)
@@ -32,6 +34,7 @@ target_link_libraries(fortresslib glog::glog)
 target_link_libraries(fortresslib yaml-cpp)
 target_link_libraries(fortresslib glfw)
 target_link_libraries(fortresslib lua_static)
+target_link_libraries(fortresslib sol2)
 
 # Add Compiler definitions
 add_compile_definitions(FORTRESS_VERSION_MAJOR=0)
@@ -69,11 +72,3 @@ add_custom_target(run
     COMMAND ./fortress
     DEPENDS fortress
 )
-
-# add_custom_target(lint ALL
-#     COMMAND cpplint --recursive ../src
-# )
-
-# add_custom_target(check ALL
-#     COMMAND cppcheck ../src/ --enable=information,warning --error-exitcode=1 -DMAJOR=1 --inline-suppr
-# )
