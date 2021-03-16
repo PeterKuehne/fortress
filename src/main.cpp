@@ -16,35 +16,11 @@
 #include "systems/objectives_system.h"
 #include "systems/prefab_system.h"
 #include <cstdlib>
-#include <execinfo.h>
 #include <glog/logging.h>
 #include <iostream>
 #include <signal.h>
 
-void handler(int signal) {
-    const unsigned int numFrames = 100;
-    void* frames[numFrames] = {0};
-    size_t stackSize = backtrace(frames, numFrames);
-    char** symbols = 0;
-
-    std::cerr << "!!!CRASH!!! Caught Segmentation Violation: " << signal
-              << std::endl;
-    symbols = backtrace_symbols(frames, stackSize);
-    if (symbols == 0) {
-        std::cerr << "Failed to load back trace symbols!" << std::endl;
-        exit(1);
-    }
-
-    for (unsigned int ii = 0; ii < stackSize; ii++) {
-        std::cerr << ii << ". " << symbols[ii] << std::endl;
-    }
-
-    exit(1);
-}
-
 int main(int argc, char** argv) {
-    // Install Segmentation Fault handler
-    signal(SIGSEGV, handler);
     FLAGS_log_dir = ".";
     google::InitGoogleLogging(argv[0]);
 

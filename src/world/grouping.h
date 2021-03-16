@@ -3,6 +3,7 @@
 #include "../core/entity.h"
 #include <map>
 #include <set>
+#include <string>
 
 /// @brief A generalised grouping of entities
 /// @details Every association of entities can be represented by a Grouping,

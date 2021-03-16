@@ -1,4 +1,5 @@
 #include "grouping_manager.h"
+#include <string>
 
 Grouping& GroupingManager::createNewGrouping(const std::string& name) {
     if (name.empty()) {

@@ -1,8 +1,10 @@
 #pragma once
 
-#include <lua5.3/lauxlib.h>
-#include <lua5.3/lua.hpp>
-#include <lua5.3/lualib.h>
+extern "C" {
+#include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+}
 #include <string>
 
 class LuaWrapper {

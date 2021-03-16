@@ -49,8 +49,8 @@ void PrefabSystem::registerHandlers() {
 void PrefabSystem::loadPrefabsFromDirectory(const std::string& directory) {
     namespace fs = std::experimental::filesystem;
     for (auto& filename : fs::directory_iterator(directory)) {
-        YAML::Node node = YAML::LoadFile(filename.path().relative_path());
-        addPrefab(filename.path().stem(), node);
+        YAML::Node node = YAML::LoadFile(filename.path().relative_path().generic_string());
+        addPrefab(filename.path().stem().generic_string(), node);
     }
 }
 

@@ -62,7 +62,7 @@ void LoadWindow::loadFiles() {
     auto lstFiles = getWidget<ListBox>("lstFiles");
     for (auto& filename : fs::directory_iterator(savePath)) {
         ListBoxItem item;
-        item.setText(filename.path().filename());
+        item.setText(filename.path().filename().generic_string());
         lstFiles->addItem(item);
     }
 }
