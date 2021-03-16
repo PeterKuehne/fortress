@@ -67,5 +67,6 @@
     "sstream": "cpp",
     "streambuf": "cpp"
   },
-  "C_Cpp.errorSquiggles": "Enabled"
+  "C_Cpp.errorSquiggles": "Enabled",
+  "cmake.configureOnOpen": false
 }

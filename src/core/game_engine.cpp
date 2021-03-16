@@ -7,8 +7,6 @@
 #include "game_system_base.h"
 #include "map_manager.h"
 #include "window_manager.h"
-#include <dirent.h>
-#include <sol/sol.hpp>
 #include <string>
 
 GameEngine::GameEngine(std::shared_ptr<GraphicsInterface> a_graphics)
@@ -16,40 +14,13 @@ GameEngine::GameEngine(std::shared_ptr<GraphicsInterface> a_graphics)
       m_windowManager(std::make_unique<WindowManager>()),
       m_map(std::make_shared<MapManager>()),
       m_entities(std::make_shared<EntityManager>()),
-      m_components(std::make_shared<ComponentManager>()) {
+      m_components(std::make_shared<ComponentManager>()) ,
+      m_lua(std::make_unique<LuaManager>()) {
     //
 }
 
-void loadLuaScripts(sol::state& lua_state) {
-    const char CONSOLE_DIR[] = "../scripts/mods";
-
-    DIR* directory = opendir(CONSOLE_DIR);
-    if (directory == nullptr) {
-        LOG(ERROR) << "Failed to open '" << CONSOLE_DIR << "'" << std::endl;
-        throw std::runtime_error("Failed to open console directory");
-    }
-    struct dirent* file = nullptr;
-    while ((file = readdir(directory)) != nullptr) {
-        std::string filename(CONSOLE_DIR);
-        filename.append("/").append(file->d_name);
-        if (filename.find(".lua") != std::string::npos) {
-            LOG(INFO) << "Loading lua script: " << filename << std::endl;
-            try {
-                lua_state.script_file(filename);
-            } catch (const std::runtime_error& error) {
-                LOG(ERROR) << "Failed to load " << filename << std::endl;
-            }
-        }
-    }
-    closedir(directory);
-}
-
 void GameEngine::initialise() {
-    sol::state lua_state;
-    lua_state.open_libraries(sol::lib::base, sol::lib::package);
-    lua_state.script("print('lua engine initialised')");
-    loadLuaScripts(lua_state);
-    lua_state.script("print('scripts loaded')");
+    m_lua->initialise(m_eventManager.get());
 
     m_eventManager->subscribe<QuitEvent>(
         [this](auto event) { this->graphics()->terminate(); });
@@ -120,7 +91,8 @@ void GameEngine::tick() {
     }
 
     windows()->nextTick();
-    return;
+    
+    m_lua->nextTick();
 }
 
 void GameEngine::turn() {
@@ -129,4 +101,5 @@ void GameEngine::turn() {
         m_systems[ii]->onTurn();
     }
     windows()->nextTurn();
+    m_lua->nextTurn();
 }

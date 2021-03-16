@@ -4,6 +4,7 @@
 #include "event_manager.h"
 #include "graphics_interface.h"
 #include "location.h"
+#include "lua_manager.h"
 
 #include <cstdlib>
 #include <memory>
@@ -40,6 +41,6 @@ private:
     std::shared_ptr<MapManager> m_map = nullptr;
     std::shared_ptr<EntityManager> m_entities = nullptr;
     std::shared_ptr<ComponentManager> m_components = nullptr;
-
+    std::unique_ptr<LuaManager> m_lua = nullptr;
     std::vector<GameSystemBase*> m_systems;
 };
